@@ -72,6 +72,13 @@ public class RegistrarTest {
     }
 
     @Test
+    public void courseLimitIsRemoved(){
+        comp225.setEnrollmentLimit(10);
+        comp225.removeEnrollmentLimit();
+        assertFalse(comp225.getEnrollmentLimitExists());
+    }
+
+    @Test
     public void enrollingUpToLimitAllowed() {
         factory.enrollMultipleStudents(comp225, 15);
         assertTrue(sally.enrollIn(comp225));
@@ -219,12 +226,12 @@ public class RegistrarTest {
             assertFalse(
                     c + " lists " + s + " as waitlisted, but " + s + " thinks they are enrolled",
                     s.getCourses().contains(c));
-
-        assertTrue(
-                c + " has an enrollment limit of " + c.getEnrollmentLimit()
-                        + ", but has " + c.getStudents().size() + " students",
-                c.getStudents().size() <= c.getEnrollmentLimit());
-
+        if(c.getEnrollmentLimitExists()) {
+            assertTrue(
+                    c + " has an enrollment limit of " + c.getEnrollmentLimit()
+                            + ", but has " + c.getStudents().size() + " students",
+                    c.getStudents().size() <= c.getEnrollmentLimit());
+        }
         if(c.getStudents().size() < c.getEnrollmentLimit())
             assertEquals(
                     c + " is not full, but has students waitlisted",

@@ -18,6 +18,7 @@ public class Course {
     private String catalogNumber;
     private String title;
     private int enrollmentLimit = 16;
+    private boolean enrollmentLimitExists;
 
     public String getCatalogNumber() {
         return catalogNumber;
@@ -40,11 +41,14 @@ public class Course {
     }
 
     public int getEnrollmentLimit() {
-        return enrollmentLimit;
+            return enrollmentLimit;
+    }
+    public boolean getEnrollmentLimitExists() {
+            return enrollmentLimitExists;
     }
 
     public boolean setEnrollmentLimit(int limit) {
-        if (limit < 0) {
+        if (limit < 0 && enrollmentLimitExists) {
             throw new IllegalArgumentException("course cannot have negative enrollment limit: " + limit);
         }
 
@@ -54,7 +58,12 @@ public class Course {
         }
 
         this.enrollmentLimit = limit;
+        this.enrollmentLimitExists = true;
         return true;
+    }
+
+    public void removeEnrollmentLimit() {
+        this.enrollmentLimitExists = false;
     }
 
     public Set<Student> getStudents() {
@@ -78,7 +87,12 @@ public class Course {
     }
 
     public boolean isFull() {
-        return roster.size() >= enrollmentLimit;
+        if(enrollmentLimitExists){
+            return roster.size() >= enrollmentLimit;
+        }
+        else{
+            return false;
+        }
     }
 
     private void addToWaitlist(Student s) {
